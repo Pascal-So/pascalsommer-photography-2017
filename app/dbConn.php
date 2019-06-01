@@ -63,6 +63,7 @@ class DBConn{
 				echo $this->db->error;
 				echo "<br>";
 			}
+			echo $query;
 			die("QUERY ERROR: couldn't prepare query");
 		}
 

@@ -2,6 +2,11 @@
 
 include_once("app/dbConn.php");
 include_once("app/staging.php");
+include_once("app/config.php");
+
+if($config['database_format_version'] != '2017') {
+    die("Admin interface disabled.");
+}
 
 session_start();
 
@@ -112,7 +117,7 @@ if(isset($_POST["post_title"]) && isset($_POST["slug"])){
 		}
 
 		$db->query("
-			INSERT INTO photos (post_id, path, description) VALUES 
+			INSERT INTO photos (post_id, path, description) VALUES
 			(?,?,?)
 			", $post_id, $new_path, $pic["description"]);
 	}
@@ -136,7 +141,7 @@ if(isset($_FILES["pictures"])){
 	        }
 	    }
 	    return $return;
-	} 
+	}
 
 	$transposed_files = array_transpose($_FILES["pictures"]);
 
@@ -199,7 +204,7 @@ $pics = $db -> query("SELECT id, path, description, active FROM staging ORDER BY
 		}
 		?>
 
-		
+
 	</ul>
 	<br>
 	<div class="button ma0 mt3 f5" id="bt-save">Save descriptions and states</div><br><br>

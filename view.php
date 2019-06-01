@@ -1,6 +1,9 @@
-<?php 
+<?php
 	include_once('app/photo.php');
 	include_once('app/comment.php');
+	include_once('app/config.php');
+
+	$commenting_active = $config['database_format_version'] == '2017';
 
 	$id = -1;
 	if(isset($_GET["id"])){
@@ -87,7 +90,7 @@
 					// don't detect arrow keys when typing input
 					return;
 				}
-				
+
 			    switch(e.which) {
 			        case 37: // left
 			        	goto_prev();
@@ -108,7 +111,7 @@
 
 <div id="comments" class="comments ma0 mt4">
 	<div id="comments_body">
-	<?php 
+	<?php
 	foreach ($comments as $comment) {
 		generate_comment_html($comment);
 	}
@@ -116,7 +119,11 @@
 	</div>
 	<div class="card ma1">
 		<h3 class="f5 ma0">New Comment</h3>
+		<?php if($commenting_active): ?>
 		<form action="comments.php?id=<?php echo $id ?>" method="post" onsubmit="return check_and_send_comment()" class="ma0 mt2">
+		<?php else: ?>
+		<div class="ma0 mt2">
+		<?php endif; ?>
 			<label for="tx-name" class="f5">Name: </label><br>
 			<input type="text" id="tx-name" name="name" class="ma0 mt1 mb1 textinput"><br>
 			<br>
@@ -126,7 +133,11 @@
 			<input id="tx-photo-id" type="hidden" name="photo_id" value="<?php echo $id ?>">
 			<img src="img/loading.png" id="comments_loading" style="display: none">
 			<input type="submit" class="f5" value="Send"><br>
+		<?php if($commenting_active): ?>
 		</form>
+		<?php else: ?>
+		</div>
+		<?php endif; ?>
 	</div><br>
 	<br>
 </div>

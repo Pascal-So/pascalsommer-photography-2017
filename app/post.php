@@ -21,7 +21,7 @@ function search_posts($pattern){
 
 function get_post_ids_before($nr, $id){
 	$db = new dbConn();
-	$created = db_format_translations()['created'];
+	$created = db_format_translations()['posts_created'];
 
 	$res = $db->query("
 			SELECT id FROM posts
@@ -34,7 +34,7 @@ function get_post_ids_before($nr, $id){
 
 function get_posts_ids_until($id){
 	$db = new dbConn();
-	$created = db_format_translations()['created'];
+	$created = db_format_translations()['posts_created'];
 
 	$res = $db->query("
 			SELECT id FROM posts
@@ -47,7 +47,7 @@ function get_posts_ids_until($id){
 
 function get_post_data($id){
 	$db = new dbConn();
-	$created = db_format_translations()['created'];
+	$created = db_format_translations()['posts_created'];
 
 	$res = $db->query("SELECT id, title, DATE_FORMAT({$created}, '%d.%m.%Y') AS created FROM posts WHERE id = ?", $id);
 
@@ -61,7 +61,7 @@ function get_post_data($id){
 
 function get_newest_post_ids(int $nr) : array {
 	$db = new dbConn();
-	$created = db_format_translations()['created'];
+	$created = db_format_translations()['posts_created'];
 
 	$res = $db->query("SELECT id FROM posts ORDER BY {$created} DESC, id DESC LIMIT ?", $nr);
 

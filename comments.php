@@ -1,6 +1,11 @@
 <?php
 
 include_once("app/comment.php");
+include_once("app/config.php");
+
+if($config['database_format_version'] != '2017') {
+    die("Commenting disabled.");
+}
 
 if(isset($_POST["photo_id"]) && isset($_POST["name"]) && isset($_POST["comment"])){
 

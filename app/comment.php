@@ -5,7 +5,7 @@ include_once('dbTranslations.php');
 
 function get_comments_array_by_photo($photo_id){
 	$db = new dbConn();
-	$created = db_format_translations()['created'];
+	$created = db_format_translations()['comments_created'];
 
 	$res = $db->query("
 		SELECT id, name, comment, DATE_FORMAT({$created}, '%d.%m.%Y, %H:%i') AS created
@@ -30,7 +30,7 @@ function post_comment($photo_id, $name, $comment){
 
 function get_all_comments(){
 	$db = new dbConn();
-	$created = db_format_translations()['created'];
+	$created = db_format_translations()['comments_created'];
 
 	return $db->query("
 		SELECT

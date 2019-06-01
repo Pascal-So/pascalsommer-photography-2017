@@ -44,7 +44,7 @@ function get_newest_photo_id() : int {
 	$query = "
 		SELECT photos.id FROM photos
 		INNER JOIN posts ON posts.id = photos.post_id
-		ORDER BY posts." . $dbt['created'] . " DESC, posts.id DESC, " . $dbt['photos_sort'] . " LIMIT 1";
+		ORDER BY posts." . $dbt['posts_created'] . " DESC, posts.id DESC, " . $dbt['photos_sort'] . " LIMIT 1";
 
 	$res = $db->query($query);
 
@@ -61,7 +61,7 @@ function get_post_id_created(int $photo_id){
 	$dbt = db_format_translations();
 
 	$post_id_created = $db->query("
-		SELECT posts.id, posts." . $dbt['created'] . " as created
+		SELECT posts.id, posts." . $dbt['posts_created'] . " as created
 		FROM photos INNER JOIN posts ON posts.id = photos.post_id
 		WHERE photos.id = ?", $photo_id);
 
@@ -74,6 +74,7 @@ function get_post_id_created(int $photo_id){
 }
 
 function get_previous_photo_id(int $photo_id) : int {
+	global $config;
 	$db = new dbConn();
 	$dbt = db_format_translations();
 
@@ -95,10 +96,10 @@ function get_previous_photo_id(int $photo_id) : int {
 	} else {
 		$res = $db->query("
 			SELECT photos.id FROM photos INNER JOIN posts On posts.id = photos.post_id
-			WHERE (posts.created_at, posts.id, -photos.weight) < (?, ?, (
+			WHERE (posts.date, posts.id, 0-photos.weight) < (?, ?, 0-(
 				SELECT weight FROM photos WHERE id = ?
 			))
-			ORDER BY posts.created_at DESC, posts.id DESC, photos.weight ASC
+			ORDER BY posts.date DESC, posts.id DESC, photos.weight ASC
 			LIMIT 1",
 			$post_id_created["created"], $post_id_created["id"], $photo_id);
 	}
@@ -112,6 +113,7 @@ function get_previous_photo_id(int $photo_id) : int {
 }
 
 function get_next_photo_id(int $photo_id) : int {
+	global $config;
 	$db = new dbConn();
 
 	$post_id_created = get_post_id_created($photo_id);
@@ -132,10 +134,10 @@ function get_next_photo_id(int $photo_id) : int {
 	} else {
 		$res = $db->query("
 			SELECT photos.id FROM photos INNER JOIN posts On posts.id = photos.post_id
-			WHERE (posts.created_at, posts.id, -photos.weight) > (?, ?, (
+			WHERE (posts.date, posts.id, 0-photos.weight) > (?, ?, 0-(
 				SELECT weight FROM photos WHERE id = ?
 			))
-			ORDER BY posts.created_at ASC, posts.id ASC, photos.weight DESC
+			ORDER BY posts.date ASC, posts.id ASC, photos.weight DESC
 			LIMIT 1",
 			$post_id_created["created"], $post_id_created["id"], $photo_id);
 	}

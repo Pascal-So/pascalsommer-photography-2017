@@ -2,6 +2,12 @@
 
 include_once("app/dbConn.php");
 include_once("app/comment.php");
+include_once("app/config.php");
+
+if($config['database_format_version'] != '2017') {
+    die("Admin interface disabled.");
+}
+
 
 session_start();
 
@@ -26,7 +32,7 @@ if(isset($_POST["delete_post"])){
 	$id = intval($_POST["delete_post"]);
 
 	$db = new dbConn();
-	
+
 	$count = $db->query("SELECT count(*) as count FROM posts WHERE id = ?", $id);
 
 	if($count[0]["count"] == 0){
@@ -50,13 +56,13 @@ if(isset($_POST["delete_post"])){
 
 		$db->query("DELETE FROM comments WHERE photo_id = ?", $pic_id);
 	}
-	
+
 
 
 	$db->query("DELETE FROM photos WHERE post_id = ?", $id);
 
 	if(!rmdir($folder_path)){
-		die("couldn't delete folder " . $folder_path); 
+		die("couldn't delete folder " . $folder_path);
 	}
 
 	die("1"); // ok

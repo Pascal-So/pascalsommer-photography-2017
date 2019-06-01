@@ -17,7 +17,8 @@ function db_format_translations() : array {
     $is17 = $config['database_format_version'] == '2017';
 
     return [
-        'created' => $is17 ? 'created' : 'created_at',
+        'posts_created' => $is17 ? 'created' : 'date',
+        'comments_created' => $is17 ? 'created' : 'created_at',
         'photos_sort' => $is17 ? 'photos.id DESC' : 'photos.weight ASC',
         'photos_sort_rev' => $is17 ? 'photos.id ASC' : 'photos.weight DESC',
     ];

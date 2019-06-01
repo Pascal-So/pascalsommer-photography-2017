@@ -1,10 +1,15 @@
 <?php
 // #################### LOGIN SYSTEM ################
-// 
+//
 // requires phpseclib
 //
 // set session variable "access_granted" to 1
 //
+
+include_once("app/config.php");
+if($config['database_format_version'] != '2017') {
+    die("Admin interface disabled.");
+}
 
 session_start();
 $target_address = "upload.php";
@@ -38,7 +43,7 @@ if(isset($_POST["crypt_usr"]) && isset($_POST["crypt_pwd"])){
 	$rsa->loadkey($_SESSION["private"]);
 	$plain_usr = $rsa->decrypt(base64_decode($crypt_usr));
 	$plain_pwd = $rsa->decrypt(base64_decode($crypt_pwd));
-	
+
 
 	$db = new dbConn();
 	$res = $db->query("SELECT hash FROM users WHERE username = ?", $plain_usr);
@@ -93,7 +98,7 @@ function onSend(){
 
 	<label for="pwd" class="f5">Password</label><br>
 	<input class="textinput f5" id="pwd" type="password" name="crypt_pwd">
-	
+
 	<br>
 	<br>
 
