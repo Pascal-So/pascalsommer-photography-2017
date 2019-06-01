@@ -1,7 +1,7 @@
 <?php
 
 class DBConn{
-	
+
 	private $db;
 
 	private $show_mysqli_errors = true;
@@ -9,7 +9,7 @@ class DBConn{
 	function __construct(){
 		include("config.php");
 
-		$db = new mysqli($hostname, $username, $password, $database);
+		$db = new mysqli($config['hostname'], $config['username'], $config['password'], $config['database']);
 
 		if($db->connect_errno){
 			die("DATABASE ERROR");
@@ -22,23 +22,23 @@ class DBConn{
     	$this->db->close();
    	}
 
-	private function refValues($arr){    
+	private function refValues($arr){
         $refs = array();
         foreach($arr as $key => $value)
             $refs[$key] = &$arr[$key];
         return $refs;
-    
+
 	    return $arr;
 	}
 
-	function get_insert_id(){
+	function get_insert_id() : int {
 		$id = $this->db->insert_id;
 		return $id;
 	}
 
-	function query(){
+	function query() : array {
 		// query("select ? from usrs", "id");
-		
+
 		$args = func_get_args();
 
 		if(count($args)<1){

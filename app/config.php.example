@@ -1,0 +1,13 @@
+<?php
+
+$config = [
+    'hostname' => "localhost",
+    'username' => "",
+    'password' => "",
+    'database' => "",
+
+    'database_format_version' => "2018",
+    'photos_base_path' => "",
+];
+
+?>

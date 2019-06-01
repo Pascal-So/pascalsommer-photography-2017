@@ -1,11 +1,15 @@
 <?php
 
 include_once('dbConn.php');
+include_once('dbTranslations.php');
 
 function get_comments_array_by_photo($photo_id){
 	$db = new dbConn();
+	$created = db_format_translations()['created'];
 
-	$res = $db->query("SELECT id, name, comment, DATE_FORMAT(created, '%d.%m.%Y, %H:%i') AS created FROM comments WHERE photo_id = ? ORDER BY created DESC", $photo_id);
+	$res = $db->query("
+		SELECT id, name, comment, DATE_FORMAT({$created}, '%d.%m.%Y, %H:%i') AS created
+		FROM comments WHERE photo_id = ? ORDER BY {$created} DESC", $photo_id);
 
 	return $res;
 }
@@ -26,16 +30,17 @@ function post_comment($photo_id, $name, $comment){
 
 function get_all_comments(){
 	$db = new dbConn();
+	$created = db_format_translations()['created'];
 
 	return $db->query("
-		SELECT 
-			posts.title, photos.id, comments.id as comment_id, 
-			comments.name, comments.comment, 
-			DATE_FORMAT(comments.created, '%d.%m.%Y, %H:%i') AS created
+		SELECT
+			posts.title, photos.id, comments.id as comment_id,
+			comments.name, comments.comment,
+			DATE_FORMAT(comments.{$created}, '%d.%m.%Y, %H:%i') AS created
 		FROM comments
 		LEFT JOIN photos ON photos.id = comments.photo_id
 		LEFT JOIN posts ON posts.id = photos.post_id
-		ORDER BY comments.created DESC");
+		ORDER BY comments.{$created} DESC");
 }
 
 function generate_comment_html($comment){
